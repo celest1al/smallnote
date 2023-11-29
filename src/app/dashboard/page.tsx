@@ -1,3 +1,4 @@
+import { CreateNoteDialog } from "@/components/create-note-dialog";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { UserButton } from "@clerk/nextjs";
@@ -18,12 +19,17 @@ export default function DashboardPage() {
                 </Button>
               </Link>
               <h1 className="text-3xl font-bold text-gray-900">My notes</h1>
-              <UserButton />
+              <UserButton afterSignOutUrl="/" />
             </div>
           </div>
           <Separator className="my-8" />
           <div className="text-center">
             <h2 className="text-xl text-gray-500">You have no notes yet.</h2>
+          </div>
+
+          {/* display all the notes */}
+          <div className="grid sm:grid-cols-3 md:grid-cols-5 grid-cols-1 gap-3">
+            <CreateNoteDialog />
           </div>
         </div>
       </div>
