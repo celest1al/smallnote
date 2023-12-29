@@ -2,7 +2,7 @@ import { pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
 
 export const $notes = pgTable("notes", {
   id: serial("id").primaryKey(),
-  name: text("name").notNull(),
+  title: text("title").notNull(),
   createAt: timestamp("create_at").notNull().defaultNow(),
   imageUrl: text("image_url"),
   userId: text("user_id").notNull(),

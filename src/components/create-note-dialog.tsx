@@ -9,7 +9,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "./ui/dialog";
-import { Plus } from "lucide-react";
+import { Loader2, Plus } from "lucide-react";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "./ui/form";
 import { Input } from "./ui/input";
 import { useForm } from "react-hook-form";
@@ -18,11 +18,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "./ui/button";
 import { useMutation } from "@tanstack/react-query";
 import { NewNoteSchema } from "@/app/api/notes/route";
+import { useRouter } from "next/navigation";
 
 export function CreateNoteDialog() {
   const form = useForm<z.infer<typeof NewNoteSchema>>({
     resolver: zodResolver(NewNoteSchema),
   });
+  const router = useRouter();
+
   const createNotebook = useMutation({
     mutationKey: ["create-note"],
     mutationFn: async (title: string) => {
@@ -35,7 +38,6 @@ export function CreateNoteDialog() {
         });
         const data = await response.json();
 
-        console.log(data);
         return data;
       } catch (error) {
         console.error("error mutate create note", error);
@@ -46,7 +48,9 @@ export function CreateNoteDialog() {
   const onSubmitNewNote = async (value: z.infer<typeof NewNoteSchema>) => {
     try {
       const note = await createNotebook.mutate(value.title, {
-        onSuccess: () => console.log("success"),
+        onSuccess: ({ data }) => {
+          router.push(`/note/${data?.note_id}`);
+        },
         onError: (error) => console.log("error"),
       });
     } catch (error) {
@@ -96,11 +100,19 @@ export function CreateNoteDialog() {
               )}
             />
             <div className="flex items-center pt-4 gap-4">
-              <Button className="bg-red-600" type="reset">
+              <Button className="bg-red-600 w-[100px]" type="reset">
                 Cancel
               </Button>
-              <Button className="bg-violet-600" type="submit">
-                Submit
+              <Button
+                disabled={createNotebook?.isPending}
+                className="bg-violet-600 w-[100px]"
+                type="submit"
+              >
+                {createNotebook?.isPending ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  "Create"
+                )}
               </Button>
             </div>
           </form>

@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@clerk/backend": "^0.37.0",
     "@clerk/nextjs": "^4.27.2",
     "@hookform/resolvers": "^3.3.2",
     "@neondatabase/serverless": "^0.6.0",
@@ -17,12 +18,15 @@
     "@radix-ui/react-separator": "^1.0.3",
     "@radix-ui/react-slot": "^1.0.2",
     "@tanstack/react-query": "^5.8.9",
+    "@tiptap/pm": "^2.1.13",
+    "@tiptap/react": "^2.1.13",
+    "@tiptap/starter-kit": "^2.1.13",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
     "dotenv": "^16.3.1",
     "drizzle-orm": "^0.29.0",
-    "lucide-react": "^0.293.0",
-    "next": "14.0.3",
+    "lucide-react": "latest",
+    "next": "latest",
     "openai-edge": "^1.2.2",
     "pg": "^8.11.3",
     "react": "^18",
@@ -35,6 +39,7 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@tailwindcss/typography": "^0.5.10",
     "@tanstack/eslint-plugin-query": "^5.8.4",
     "@types/node": "^20",
     "@types/react": "^18",
@@ -42,7 +47,7 @@
     "autoprefixer": "^10.0.1",
     "drizzle-kit": "^0.20.6",
     "eslint": "^8",
-    "eslint-config-next": "14.0.3",
+    "eslint-config-next": "^14.0.4",
     "postcss": "^8",
     "tailwindcss": "^3.3.0",
     "typescript": "^5"

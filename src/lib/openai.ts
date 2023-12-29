@@ -35,8 +35,6 @@ export async function generateImagePrompt(noteTitle: string) {
 
     const image_description = data?.choices?.[0]?.message?.content;
 
-    console.log("image_description", image_description);
-
     return image_description as string;
   } catch (error) {
     console.error("error generating thumbnail description ", error);
@@ -44,4 +42,20 @@ export async function generateImagePrompt(noteTitle: string) {
   }
 }
 
-export async function generateImage() {}
+export async function generateImage(image_description: string) {
+  try {
+      const response = await openai.createImage({
+        prompt: image_description,
+        n: 1,
+        size: "256x256"
+      })
+
+      const data = await response.json()
+      const image_url = data?.data?.[0]?.url
+
+      return image_url as string
+  } catch (error) {
+    console.error("error generating image ", error);
+    throw error;
+  }
+}

@@ -1,6 +1,8 @@
-import { generateImagePrompt } from "@/lib/openai";
+import { db } from "@/lib/db";
+import { $notes } from "@/lib/db/schema";
+import { generateImage, generateImagePrompt } from "@/lib/openai";
 import { auth } from "@clerk/nextjs";
-import { NextResponse, type NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 import { z } from "zod";
 
 export const NewNoteSchema = z.object({
@@ -9,7 +11,7 @@ export const NewNoteSchema = z.object({
     .min(1, "Note title is required"),
 });
 
-export async function POST(req: NextRequest) {
+export async function POST(req: Request) {
   try {
     const { userId } = auth();
 
@@ -29,19 +31,59 @@ export async function POST(req: NextRequest) {
 
     const image_description = await generateImagePrompt(title);
 
-    console.log("image_description", image_description);
+    if (!image_description) {
+      return NextResponse.json(
+        {
+          error: "Failed to generate image description",
+        },
+        {
+          status: 500,
+        }
+      );
+    }
+
+    const image_url = await generateImage(image_description);
+
+    if (!image_url) {
+      return NextResponse.json(
+        {
+          error: "Failed to generate image url",
+        },
+        {
+          status: 500,
+        }
+      );
+    }
+
+    const note = await db
+      .insert($notes)
+      .values({
+        title,
+        userId,
+        imageUrl: image_url,
+      })
+      .returning();
 
     return NextResponse.json(
       {
         message: "Success generating note thumbnail",
         data: {
-          image_description,
+          note_id: note?.[0]?.id,
         },
       },
       { status: 201 }
     );
   } catch (error) {
-    console.error("error generating note thumbnail ", error);
+    if (error instanceof TypeError) {
+      return NextResponse.json(
+        {
+          message: "error generating note thumbnail",
+          error: String(error),
+        },
+        { status: 500 }
+      );
+    }
+
     return NextResponse.json(
       {
         message: "error generating note thumbnail",
