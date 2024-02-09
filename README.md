@@ -1,6 +1,6 @@
 # smallnote
 
-AI powered note for learning purpose
+AI powered note for learning purpose. [Preview](https://smallnote.vercel.app/)
 
 ## Tech Stack
 
@@ -12,4 +12,4 @@ AI powered note for learning purpose
 - Drizzle ORM
 - Firebase storage
 - Vercel AI
-- Tiptap WYSIWYG
+- Tiptap Editor
