@@ -6,7 +6,6 @@ import { db } from "@/lib/db";
 import { $notes } from "@/lib/db/schema";
 import { auth } from "@clerk/nextjs";
 import { and, eq } from "drizzle-orm";
-import Link from "next/link";
 import { redirect } from "next/navigation";
 
 type NotePageProps = {
@@ -42,11 +41,11 @@ export default async function NotePage({ params }: NotePageProps) {
       <div className="mx-auto flex max-w-4xl flex-col gap-4">
         {/* header */}
         <div className="flex items-center rounded-lg border border-stone-200 p-4 shadow-xl">
-          <Link href="/dashboard" className="pr-4">
+          <a href="/dashboard" className="pr-4">
             <Button className="bg-violet-600" type="button">
               Back
             </Button>
-          </Link>
+          </a>
           <div className="flex items-center gap-2">
             <span className="font-semibold">
               {user?.firstName} {user?.lastName}
