@@ -44,7 +44,14 @@ export async function GET(
 
     const note = notes[0];
 
-    return note;
+    return NextResponse.json(
+      {
+        data: note,
+      },
+      {
+        status: 200,
+      },
+    );
   } catch (error) {
     if (error instanceof TypeError) {
       return NextResponse.json(

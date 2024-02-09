@@ -16,7 +16,7 @@ type NotePageProps = {
 };
 
 export default async function NotePage({ params }: NotePageProps) {
-  const { userId } = await auth();
+  const { userId } = auth();
 
   if (!userId) {
     return redirect("/");

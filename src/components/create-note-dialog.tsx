@@ -18,8 +18,8 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "./ui/button";
 import { useMutation } from "@tanstack/react-query";
-import { NewNoteSchema } from "@/app/api/notes/route";
 import { useRouter } from "next/navigation";
+import { NewNoteSchema } from "@/app/api/notes/type";
 
 export function CreateNoteDialog() {
   const form = useForm<z.infer<typeof NewNoteSchema>>({

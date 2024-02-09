@@ -3,13 +3,7 @@ import { $notes } from "@/lib/db/schema";
 import { generateImage, generateImagePrompt } from "@/lib/openai";
 import { auth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
-import { z } from "zod";
-
-export const NewNoteSchema = z.object({
-  title: z
-    .string({ required_error: "Note title is required" })
-    .min(1, "Note title is required"),
-});
+import { NewNoteSchema } from "./type";
 
 export async function POST(req: Request) {
   try {
@@ -25,7 +19,7 @@ export async function POST(req: Request) {
     if (!body) {
       return NextResponse.json(
         { error: "Request body is empty" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -38,7 +32,7 @@ export async function POST(req: Request) {
         },
         {
           status: 500,
-        }
+        },
       );
     }
 
@@ -51,7 +45,7 @@ export async function POST(req: Request) {
         },
         {
           status: 500,
-        }
+        },
       );
     }
 
@@ -71,7 +65,7 @@ export async function POST(req: Request) {
           note_id: note?.[0]?.id,
         },
       },
-      { status: 201 }
+      { status: 201 },
     );
   } catch (error) {
     if (error instanceof TypeError) {
@@ -80,7 +74,7 @@ export async function POST(req: Request) {
           message: "error generating note thumbnail",
           error: String(error),
         },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -89,7 +83,7 @@ export async function POST(req: Request) {
         message: "error generating note thumbnail",
         error,
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
