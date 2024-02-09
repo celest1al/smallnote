@@ -8,6 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogClose,
 } from "./ui/dialog";
 import { Loader2, Plus } from "lucide-react";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "./ui/form";
@@ -23,6 +24,9 @@ import { useRouter } from "next/navigation";
 export function CreateNoteDialog() {
   const form = useForm<z.infer<typeof NewNoteSchema>>({
     resolver: zodResolver(NewNoteSchema),
+    defaultValues: {
+      title: "",
+    },
   });
   const router = useRouter();
 
@@ -45,11 +49,26 @@ export function CreateNoteDialog() {
     },
   });
 
+  const uploadFile = useMutation({
+    mutationKey: ["upload-file"],
+    mutationFn: async (note_id: string) => {
+      const response = await fetch("/api/upload", {
+        method: "POST",
+        body: JSON.stringify({
+          note_id,
+        }),
+      });
+      const data = await response.json();
+      return data;
+    },
+    onSuccess: (data) => router.push(`/note/${data?.data?.note_id}`),
+  });
+
   const onSubmitNewNote = async (value: z.infer<typeof NewNoteSchema>) => {
     try {
-      const note = await createNotebook.mutate(value.title, {
+      await createNotebook.mutate(value.title, {
         onSuccess: ({ data }) => {
-          router.push(`/note/${data?.note_id}`);
+          uploadFile.mutate(data?.note_id);
         },
         onError: (error) => console.log("error"),
       });
@@ -65,12 +84,12 @@ export function CreateNoteDialog() {
           role="button"
           tabIndex={0}
           className={cn(
-            "border-dashed border-2 border-violet-600 h-full rounded-lg",
-            "items-center justify-center flex hover:shadow-xl transition",
-            "hover:-translate-y-1 flex-row p-4 gap-3"
+            "h-full rounded-lg border-2 border-dashed border-violet-600",
+            "flex items-center justify-center transition hover:shadow-xl",
+            "flex-row gap-3 p-4 hover:-translate-y-1",
           )}
         >
-          <Plus className="w-6 h-6 text-violet-600" strokeWidth={3} />
+          <Plus className="h-6 w-6 text-violet-600" strokeWidth={3} />
           <h2 className="font-semibold text-violet-600">New note</h2>
         </div>
       </DialogTrigger>
@@ -99,17 +118,19 @@ export function CreateNoteDialog() {
                 </FormItem>
               )}
             />
-            <div className="flex items-center pt-4 gap-4">
-              <Button className="bg-red-600 w-[100px]" type="reset">
-                Cancel
-              </Button>
+            <div className="flex items-center gap-4 pt-4">
+              <DialogClose asChild>
+                <Button className="w-[100px] bg-red-600" type="reset">
+                  Cancel
+                </Button>
+              </DialogClose>
               <Button
                 disabled={createNotebook?.isPending}
-                className="bg-violet-600 w-[100px]"
+                className="w-[100px] bg-violet-600"
                 type="submit"
               >
                 {createNotebook?.isPending ? (
-                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <Loader2 className="h-4 w-4 animate-spin" />
                 ) : (
                   "Create"
                 )}

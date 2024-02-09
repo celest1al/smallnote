@@ -1,4 +1,5 @@
 import { Configuration, OpenAIApi } from "openai-edge";
+import { Note } from "./db/schema";
 
 const openaiApiKey = process.env.OPENAI_API_KEY ?? "";
 
@@ -44,16 +45,16 @@ export async function generateImagePrompt(noteTitle: string) {
 
 export async function generateImage(image_description: string) {
   try {
-      const response = await openai.createImage({
-        prompt: image_description,
-        n: 1,
-        size: "256x256"
-      })
+    const response = await openai.createImage({
+      prompt: image_description,
+      n: 1,
+      size: "256x256",
+    });
 
-      const data = await response.json()
-      const image_url = data?.data?.[0]?.url
+    const data = await response.json();
+    const image_url = data?.data?.[0]?.url;
 
-      return image_url as string
+    return image_url as string;
   } catch (error) {
     console.error("error generating image ", error);
     throw error;

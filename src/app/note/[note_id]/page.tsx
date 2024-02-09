@@ -1,3 +1,4 @@
+import { DeleteButton } from "@/components/delete-button";
 import { Editor } from "@/components/editor";
 import { Button } from "@/components/ui/button";
 import { clerk } from "@/lib/clerk-server";
@@ -27,7 +28,7 @@ export default async function NotePage({ params }: NotePageProps) {
     .select()
     .from($notes)
     .where(
-      and(eq($notes.id, Number(params?.note_id)), eq($notes.userId, userId))
+      and(eq($notes.id, Number(params?.note_id)), eq($notes.userId, userId)),
     );
 
   if (notes.length !== 1) {
@@ -37,10 +38,10 @@ export default async function NotePage({ params }: NotePageProps) {
   const note = notes[0];
 
   return (
-    <main className="min-h-dvh grainy p-8">
-      <div className="max-w-4xl mx-auto flex flex-col gap-4">
+    <main className="grainy min-h-dvh p-8">
+      <div className="mx-auto flex max-w-4xl flex-col gap-4">
         {/* header */}
-        <div className="flex items-center border shadow-xl border-stone-200 rounded-lg p-4">
+        <div className="flex items-center rounded-lg border border-stone-200 p-4 shadow-xl">
           <Link href="/dashboard" className="pr-4">
             <Button className="bg-violet-600" type="button">
               Back
@@ -53,12 +54,14 @@ export default async function NotePage({ params }: NotePageProps) {
             <span>/</span>
             <span className="font-semibold text-stone-500">{note?.title}</span>
           </div>
-          <div className="ml-auto">Delete button</div>
+          <div className="ml-auto">
+            <DeleteButton noteId={note.id} />
+          </div>
         </div>
 
         {/* editor */}
-        <div className="border-stone-200 shadow-xl border rounded-lg px-16 py-8 w-full">
-          <Editor />
+        <div className="w-full rounded-lg border border-stone-200 px-16 py-8 shadow-xl">
+          <Editor note={note} />
         </div>
       </div>
     </main>
